@@ -1,23 +1,23 @@
 const searchForm = document.querySelector("#searchForm");
-const capitalInput = document.querySelector("#inputValue");
+const input = document.querySelector("#inputValue");
 const tableBody = document.querySelector("tbody");
 
 searchForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const capitalName = capitalInput.value.trim();
-  if (!capitalName) return;
+  const countryName = input.value.trim();
+  if (!countryName) return;
 
   tableBody.innerHTML = `<tr><td colspan="5">Ładowanie danych...</td></tr>`;
 
   try {
     const response = await fetch(
-      `https://restcountries.com/v3.1/capital/${encodeURIComponent(capitalName)}`
+      `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
     );
 
     if (!response.ok) {
       if (response.status === 404) {
-        tableBody.innerHTML = `<tr><td colspan="5">Nie znaleziono kraju o podanej stolicy.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5">Nie znaleziono kraju o podanej nazwie.</td></tr>`;
         return;
       }
       throw new Error("Nie udało się pobrać danych z API.");
@@ -35,7 +35,9 @@ searchForm.addEventListener("submit", async (event) => {
           ? country.population.toLocaleString()
           : "Brak danych";
         const region = country?.region ?? "Brak danych";
-        const subregion = country?.subregion ?? "Brak danych";
+        const languages = country?.languages
+          ? Object.values(country.languages).join(", ")
+          : "Brak danych";
 
         return `
           <tr>
@@ -43,7 +45,7 @@ searchForm.addEventListener("submit", async (event) => {
             <td>${capital}</td>
             <td>${population}</td>
             <td>${region}</td>
-            <td>${subregion}</td>
+            <td>${languages}</td>
           </tr>
         `;
       })
