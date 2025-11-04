@@ -10,7 +10,7 @@ loadStationsBtn.addEventListener("click", async (event) => {
   // żeby przepuszczało trzeba wejść na stronę https://cors-anywhere.herokuapp.com/corsdemo i poprosić o dostęp 
   try {
     const proxy = "https://cors-anywhere.herokuapp.com/";
-    const response = await fetch(`${proxy}${api_base}/stations?limit=25`, {
+    const response = await fetch(`${proxy}${api_base}/datasets`, {
       headers: { token: api_token }
     });
 
@@ -28,16 +28,16 @@ loadStationsBtn.addEventListener("click", async (event) => {
       .map((station) => {
         const id = station.id ?? "Brak danych";
         const name = station.name ?? "Brak danych";
-        const state = station.state ?? "Brak danych";
-        const latitude = station.latitude ?? "Brak danych";
-        const longitude = station.longitude ?? "Brak danych";
+        const desc = station.description ?? "Brak danych";
+        const start = station.mindate ?? "Brak danych";
+        const end = station.maxdate ?? "Brak danych";
         return `
           <tr>
             <td>${id}</td>
             <td>${name}</td>
-            <td>${state}</td>
-            <td>${latitude}</td>
-            <td>${longitude}</td>
+            <td>${desc}</td>
+            <td>${start}</td>
+            <td>${end}</td>
           </tr>
         `;
       })
