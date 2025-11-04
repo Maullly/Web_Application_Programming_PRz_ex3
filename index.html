@@ -9,19 +9,18 @@
   </head>
   <body>
     <main>
-      <form id="searchForm">
-        <input type="text" placeholder="Np. Poland" id="inputValue" required />
-        <button id="actionBtn" type="submit">Szukaj</button>
-      </form>
-       <h2 class="tableHeader">Dane wyszukanego kraju</h2>
+       <h2 class="tableHeader">Dane klimatyczne NOAA</h2>
+       <div class="buttonContainer">
+          <button id="loadStationsBtn">Pobierz stacje</button>
+       </div>
       <table>
         <thead>
           <tr>
+            <th>Station ID</th>
             <th>Name</th>
-            <th>Capital</th>
-            <th>Population</th>
-            <th>Region</th>
-            <th>Languages</th>
+            <th>State</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
           </tr>
         </thead>
         <tbody></tbody>

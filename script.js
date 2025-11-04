@@ -1,51 +1,43 @@
-const searchForm = document.querySelector("#searchForm");
-const input = document.querySelector("#inputValue");
+// const searchForm = document.querySelector("#searchForm");
+// const input = document.querySelector("#inputValue");
 const tableBody = document.querySelector("tbody");
+const loadStationsBtn = document.querySelector("#loadStationsBtn")
+const api_token = "ppocAxGDRhwgUUBNNLKJZCRcczajrqfI";
+const api_base = "https://www.ncei.noaa.gov/cdo-web/api/v2"
+loadStationsBtn.addEventListener("click", async (event) => {
+  tableBody.innerHTML = `<tr><td colspan="5">Ładowanie danych ze stacji...</td></tr>`;
 
-searchForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const countryName = input.value.trim();
-  if (!countryName) return;
-
-  tableBody.innerHTML = `<tr><td colspan="5">Ładowanie danych...</td></tr>`;
-
+  // żeby przepuszczało trzeba wejść na stronę https://cors-anywhere.herokuapp.com/corsdemo i poprosić o dostęp 
   try {
-    const response = await fetch(
-      `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
-    );
+    const proxy = "https://cors-anywhere.herokuapp.com/";
+    const response = await fetch(`${proxy}${api_base}/stations?limit=25`, {
+      headers: { token: api_token }
+    });
 
     if (!response.ok) {
-      if (response.status === 404) {
-        tableBody.innerHTML = `<tr><td colspan="5">Nie znaleziono kraju o podanej nazwie.</td></tr>`;
-        return;
-      }
-      throw new Error("Nie udało się pobrać danych z API.");
+      throw new Error(`Błąd: ${response.status} - ${response.statusText}`);
     }
 
-    const countries = await response.json();
-
-    const rows = countries
-      .map((country) => {
-        const name = country?.name?.official ?? "Brak danych";
-        const capital = Array.isArray(country?.capital)
-          ? country.capital.join(", ")
-          : country?.capital ?? "Brak danych";
-        const population = country?.population
-          ? country.population.toLocaleString()
-          : "Brak danych";
-        const region = country?.region ?? "Brak danych";
-        const languages = country?.languages
-          ? Object.values(country.languages).join(", ")
-          : "Brak danych";
-
+    const data = await response.json();
+    
+    if (!data.results || data.results.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5">Brak danych o stacjach.</td></tr>`;
+      return;
+    }
+    const rows = data.results
+      .map((station) => {
+        const id = station.id ?? "Brak danych";
+        const name = station.name ?? "Brak danych";
+        const state = station.state ?? "Brak danych";
+        const latitude = station.latitude ?? "Brak danych";
+        const longitude = station.longitude ?? "Brak danych";
         return `
           <tr>
+            <td>${id}</td>
             <td>${name}</td>
-            <td>${capital}</td>
-            <td>${population}</td>
-            <td>${region}</td>
-            <td>${languages}</td>
+            <td>${state}</td>
+            <td>${latitude}</td>
+            <td>${longitude}</td>
           </tr>
         `;
       })

@@ -94,3 +94,13 @@ tr:hover {
   background-color: #def3e2;
   transition: background-color 0.2s;
 }
+.buttonContainer {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#loadStationsBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
